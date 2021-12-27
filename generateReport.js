@@ -27,9 +27,8 @@ function writeFile(data) {
             for (const [key, value] of Object.entries(packageObject)) {
                 //append all dependencies
                 if (data.serviceNames[serviceNameIndex] === key) {
-                    if (value.dependencies && value.devDependencies) {
+                    if (value.dependencies) {
                         commonDependencies = commonDependencies.concat(Object.keys(value.dependencies))
-                        commonDependencies = commonDependencies.concat(Object.keys(value.devDependencies))
                     }
                     serviceNameIndex++;
                 }
@@ -58,15 +57,13 @@ function writeFile(data) {
                 })[0][service];
                 if (value.dependencies && value.dependencies[dependency]) {
                     value = value.dependencies[dependency];
-                } else if (value.devDependencies && value.devDependencies[dependency]) {
-                    value = value.devDependencies[dependency];
                 } else {
                     value = 'n/a'
                 }
                 worksheet1.cell(col, row).string(value).style({ font: { bold: false } });
             }
         }
-        let fileName = process.cwd().split('\\').pop().concat('-Dependencies.xlsx');
+        let fileName = process.cwd().split('\\').pop().concat('-Dependencies-Report.xlsx');
         console.log(`Creating file ${fileName} in location `, process.cwd())
         workbook.write(fileName);
 
@@ -79,13 +76,13 @@ function writeFile(data) {
 
 /**
  * get all folders/services within services folders
- * read package.json build object with dependencies and devDependencies
+ * read package.json build object with dependencies
  */
 async function readFiles() {
     try {
         let serviceNames = [];
         const dependencies = [];
-        const directoryPath = path.join(__dirname, 'Services');
+        const directoryPath = path.join(__dirname, 'SRC');
         serviceNames = await fs.readdirSync(directoryPath, function (err, files) {
             if (err) {
                 return console.log('Unable to scan directory: ' + err);
@@ -97,21 +94,20 @@ async function readFiles() {
             let packageObject = require(servicePath + '\\package.json');
             dependencies.push({
                 [file]: {
-                    dependencies: packageObject.dependencies,
-                    devDependencies: packageObject.devDependencies
+                    dependencies: packageObject.dependencies
                 }
             })
         });
         return { serviceNames, dependencies };
     } catch (err) {
-        console.log('error in reading files', err);
+        console.log('Error in reading files', err);
         throw err;
     }
 }
 
 /**
- * 1 readFiles
- * 2 createFiles
+ * 1 readFiles from folder
+ * 2 generate report
  */
 async function main() {
     try {
