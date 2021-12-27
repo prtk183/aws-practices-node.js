@@ -7,6 +7,10 @@ const path = require('path');
  * Prepare data file
  * 
  * @param {*} data data from readFileFunction
+ * dataFile will be:
+ * |            | service1  | service2 |
+ * |dependency1 |           |          |
+ * | depedency2 |           |          |
  */
 function writeFile(data) {
     try {
@@ -76,7 +80,12 @@ function writeFile(data) {
 
 /**
  * get all folders/services within services folders
- * read package.json build object with dependencies
+ * read package.json build object with dependencies as:
+ *  dependencies = [{
+    'serviceName' : {
+        'excel4node' : '1.0.0'
+        }
+    }]
  */
 async function readFiles() {
     try {
