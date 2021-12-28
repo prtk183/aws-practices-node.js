@@ -7,14 +7,16 @@ This script is used if we need to get a file from s3 into our local using pre-si
 
 ## Dependency generator script - generateReport.js
 This script is used to generate report in xlsx format, which will have list of npm dependencies used in project anlong with its verison.
-conisderation:
+### conisderation:
 The folder structure is as below:
 src
-|-----serviceName1
-|-----serviceName2
-      |------------package.json
+src/serviceName1
+src/serviceName2
+src/servicename2/package.json
       
 The output format of file will be:
-|              |serviceName1|serviceName2|
-|depedencyName1|            |            |
-|depedencyName2|            |            |
+
+ || #serviceName1 | #serviceName2 |
+|--- | --- | --- |
+depedencyName1 | 1.0.0 | 2.0.0 |
+depedencyName2 | 2.0.0 | 3.2.1 |
